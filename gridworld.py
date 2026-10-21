@@ -1,3 +1,5 @@
+from copy import deepcopy    
+
 class GridWorld:
     """
     A 4x4 grid environment for an AI agent.
@@ -18,9 +20,12 @@ class GridWorld:
         self.grid[2][2] = '#'
         self.grid[3][3] = 'G'
     def display(self):
-        """Print the static grid row by row."""
-        for row in self.grid:
-            print(" ".join(row))
+        """Display the grid with the agent's current position."""
+        new_grid = deepcopy(self.grid)
+        row, col = self.position
+        new_grid[row][col] = "R"
+        for grid_row in new_grid:
+            print(" ".join(grid_row))
     def move(self, direction):
         """
         Move the agent in the specified direction.
@@ -31,35 +36,58 @@ class GridWorld:
             new_row = row
             new_col = col + 1
             if new_col >= self.size:
-                print("unable to exceed the edge") # Check boundaries before accessing the grid
+                return # Check boundaries before accessing the grid
             elif self.grid[new_row][new_col] == '#':
-                print('oops! u hit the barrier')
+                return
             else:
                 self.position = (new_row, new_col)
         elif direction == "left":
             new_row = row
             new_col = col - 1
             if new_col < 0:
-                print("unable to exceed the edge")
+                return
             elif self.grid[new_row][new_col] == '#':
-                print('oops! u hit the barrier')
+                return
             else:
                 self.position = (new_row, new_col)
         elif direction == "up":
             new_row = row - 1
             new_col = col
             if new_row < 0:
-                print("unable to exceed the edge")
+                return
             elif self.grid[new_row][new_col] == '#':
-                print('oops! u hit the barrier')
+                return
             else:
                 self.position = (new_row, new_col)
         elif direction == "down":
             new_row = row + 1
             new_col = col
             if new_row >= self.size:
-                print("unable to exceed the edge")
+                return
             elif self.grid[new_row][new_col] == '#':
-                print('oops! u hit the barrier')
+                return
             else:
                 self.position = (new_row, new_col)
+    def reset(self):
+        """Reset the agent to its starting position."""
+        self.position = (0, 0)
+    def step(self, action):
+        """
+        Execute one action in the GridWorld environment.
+        Returns:
+        position: Agent's position after the action.
+        reward: Reward received for this action.
+        done: Whether the agent has reached the goal.
+        """
+        reward = 0
+        done = False
+        old_position = self.position
+        self.move(action)
+        if self.position == old_position:
+            reward -= 3
+        elif self.position == (self.size - 1, self.size - 1):
+            reward += 10
+            done = True
+        else:
+            reward -= 1
+        return self.position, reward, done
