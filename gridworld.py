@@ -91,3 +91,21 @@ class GridWorld:
         else:
             reward -= 1
         return self.position, reward, done
+    def initialize_q_table(self):
+        """
+        Initialize the Q-table for all states in the GridWorld.
+        Each state has four actions, with Q-values initialized to 0.
+        """
+        # Generate all possible coordinates (row, col)
+        coordinates = []
+        for i in range(self.size):
+            for j in range(self.size):
+                coordinates.append((i, j))
+        # Create a dictionary using coordinates as keys
+        self.q_table = {coordinate: 0 for coordinate in coordinates}
+        next_action = {'up':0,'down':0,'left':0,'right':0}
+        # Give each state an independent action dictionary
+        # to prevent Q-value changes from affecting other states
+        for key in self.q_table:
+            copy_action = deepcopy(next_action)
+            self.q_table[key] = copy_action
