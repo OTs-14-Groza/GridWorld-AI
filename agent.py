@@ -1,5 +1,6 @@
 from gridworld import GridWorld
 import random
+import copy
 class Agent():
     """
     An agent that selects actions using an epsilon-greedy policy.
@@ -9,7 +10,6 @@ class Agent():
         self.epsilon = 0.2
         self.exploration = self.epsilon
         self.exploitation = 1 - self.epsilon
-        
         # Create the environment and initialize its Q-table
         self.environment = GridWorld()
         self.environment.initialize_q_table()
@@ -22,13 +22,16 @@ class Agent():
         Select an action with the highest Q-value.
         Randomly break ties between equally valued actions.
         """
-        # TODO: Complete exploitation logic
-        # TODO: Fix state access and dictionary operations
-        row, col = self.position
-        action_value_pair = {}
-        for pair in self.environment.q_table[row, col]:
-            action_value_pair.append(pair.items())
-        
+        row, col = self.environment.position
+        store_q_value = []
+        action_of_max_q_value = []
+        for action in self.environment.q_table[(row, col)]: 
+            store_q_value.append(self.environment.q_table[(row, col)][action])
+        highest = max(store_q_value)
+        for action in self.environment.q_table[(row, col)]:
+            if self.environment.q_table[(row, col)].get(action) == highest:
+                action_of_max_q_value.append(action)
+        return random.choice(action_of_max_q_value)
     def choice(self):
         """
         Select exploration or exploitation based on epsilon.
