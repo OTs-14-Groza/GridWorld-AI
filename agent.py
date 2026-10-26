@@ -47,3 +47,4 @@ class Agent():
         elif result == ['exploit']:
             action = self.exploit()
         return action
+        ## return result ## for testing purposes
