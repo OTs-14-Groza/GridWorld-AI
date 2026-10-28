@@ -10,6 +10,8 @@ class Agent():
         self.epsilon = 0.2
         self.exploration = self.epsilon
         self.exploitation = 1 - self.epsilon
+        self.learning_rate = 0.1
+        self.discount_factor = 0.9        
         # Create the environment and initialize its Q-table
         self.environment = GridWorld()
         self.environment.initialize_q_table()
@@ -48,3 +50,30 @@ class Agent():
             action = self.exploit()
         return action
         ## return result ## for testing purposes
+    def update_q_table(self):
+        """
+        Update the Q-value for one action using the Q-learning rule.
+        Handle terminal and non-terminal states separately.
+        """
+        alpha = self.learning_rate
+        gamma = self.discount_factor
+
+        # Store the current state before taking an action
+        current_position = self.environment.position
+        
+        # Select and execute an action
+        action = self.choice()
+        next_position, reward, done = self.environment.step(action)
+        q_value_next = []
+        for movement in self.environment.q_table[next_position]:
+            q_value_next.append(self.environment.q_table[next_position][movement])
+        
+        # Calculate the Q-value adjustment using the Bellman equation
+        q_value_variable = alpha*(reward + gamma*max(q_value_next) - self.environment.q_table[current_position][action])
+        if done == True:
+            # Terminal state: update using only the immediate reward
+            self.environment.q_table[current_position][action] += alpha*(reward - self.environment.q_table[current_position][action])
+            return
+        else:    
+            # Non-terminal state: include discounted future rewards
+            self.environment.q_table[current_position][action] += q_value_variable
