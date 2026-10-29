@@ -13,7 +13,7 @@ environment using reinforcement learning.
 - Boundary and obstacle detection
 
 ## To Do
-- [ ] Display the agent's current position
-- [ ] Implement reset and reward system
-- [ ] Implement Q-learning
+- [x] Display the agent's current position
+- [x] Implement reset and reward system
+- [ ] Implement Q-learning (Q-table, epsilon-greedy and the Bellman update are written; still needs a training loop to actually run)
 - [ ] Visualize the training process

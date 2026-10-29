@@ -83,9 +83,10 @@ class GridWorld:
         done = False
         old_position = self.position
         self.move(action)
+        row, col = self.position
         if self.position == old_position:
             reward -= 3
-        elif self.position == (self.size - 1, self.size - 1):
+        elif self.grid[row][col] == 'G':
             reward += 10
             done = True
         else:
