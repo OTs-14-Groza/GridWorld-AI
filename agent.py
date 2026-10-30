@@ -50,7 +50,7 @@ class Agent():
             action = self.exploit()
         return action
         ## return result ## for testing purposes
-    def update_q_table(self):
+    def update_q_table(self, action):
         """
         Update the Q-value for one action using the Q-learning rule.
         Handle terminal and non-terminal states separately.
@@ -62,7 +62,6 @@ class Agent():
         current_position = self.environment.position
         
         # Select and execute an action
-        action = self.choice()
         next_position, reward, done = self.environment.step(action)
         q_value_next = []
         for movement in self.environment.q_table[next_position]:

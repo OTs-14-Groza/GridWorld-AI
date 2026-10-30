@@ -89,7 +89,7 @@ class GridWorld:
         elif self.grid[row][col] == 'G':
             reward += 10
             done = True
-        else:
+        else: 
             reward -= 1
         return self.position, reward, done
     def initialize_q_table(self):
