@@ -1,6 +1,5 @@
 from gridworld import GridWorld
 import random
-import copy
 class Agent():
     """
     An agent that selects actions using an epsilon-greedy policy.
@@ -31,7 +30,7 @@ class Agent():
             store_q_value.append(self.environment.q_table[(row, col)][action])
         highest = max(store_q_value)
         for action in self.environment.q_table[(row, col)]:
-            if self.environment.q_table[(row, col)].get(action) == highest:
+            if self.environment.q_table[(row, col)][action] == highest:
                 action_of_max_q_value.append(action)
         return random.choice(action_of_max_q_value)
     def choice(self):
@@ -40,10 +39,7 @@ class Agent():
         Return the chosen action.
         """
         # Choose a strategy using weighted probabilities
-        result = random.choices(
-            ['explore', 'exploit'],
-            weights=[self.exploration,self.exploitation]
-            )
+        result = random.choices(['explore', 'exploit'],weights=[self.exploration,self.exploitation])
         if result == ['explore']:
             action = self.explore()
         elif result == ['exploit']:
@@ -72,7 +68,7 @@ class Agent():
         if done == True:
             # Terminal state: update using only the immediate reward
             self.environment.q_table[current_position][action] += alpha*(reward - self.environment.q_table[current_position][action])
-            return
+            return done
         else:    
             # Non-terminal state: include discounted future rewards
             self.environment.q_table[current_position][action] += q_value_variable

@@ -1,28 +1,21 @@
-import random
-from gridworld import GridWorld
 from agent import Agent
 
-world = GridWorld()
 robot = Agent()
-robot.environment.initialize_q_table()
 
 ## test
-robot.update_q_table('up')
-print(robot.environment.q_table[(0,0)]['up'])
+for i in range(1000):
+    result = False
+    max_time = 0
+    robot.environment.reset()
+    while result != True and max_time < 1000:
+        result = robot.update_q_table(robot.choice())
+        max_time += 1
 
-robot.update_q_table('right')
-print(robot.environment.q_table[(0,0)]['right'])
-
-robot.environment.position = (0,1)
-robot.update_q_table('down')
-print(robot.environment.q_table[(0,1)]['down'])
-
-robot.environment.position = (3,2)
-robot.update_q_table('right')
-print(robot.environment.q_table[(3,2)]['right'])
-
-robot.environment.initialize_q_table()
-robot.environment.position = (0,0)
-robot.environment.q_table[(0,1)]['right'] = 5
-robot.update_q_table('right')
-print(robot.environment.q_table[(0,0)]['right'])
+robot.environment.reset()
+count_step = 0
+row, col = robot.environment.position
+while robot.environment.grid[row][col] != 'G':
+    robot.environment.move(robot.exploit())
+    count_step += 1
+    row, col = robot.environment.position
+print(count_step)
